@@ -1,0 +1,9 @@
+#editor-feed {
+  flex: 1 1 0;
+  min-width: 0;
+
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-sizing: border-box;
+  padding: 16px;
+}
