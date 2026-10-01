@@ -1,9 +1,15 @@
 #editor-feed {
   flex: 1 1 0;
   min-width: 0;
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 
   border: 1px solid var(--border);
   border-radius: 8px;
   box-sizing: border-box;
   padding: 16px;
+  text-align: start;
 }

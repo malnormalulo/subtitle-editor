@@ -16,7 +16,12 @@ type Frames = IntRange<0, 60>  //[0, 59)
 type FPS = 23.976 | 24 | 25 | 29.97 | 30 | 50 | 59.94 | 60;
 
 class SMPTEtime {
-    public fps: FPS;
+    // format 00:00:00:00
+    public static readonly pattern: string = "^[0-9]{2}:[0-5][0-9]:[0-5][0-9]:[0-5][0-9]$";
+    private static readonly extractPattern: string = "^([0-9]{2}):([0-5][0-9]):([0-5][0-9]):([0-5][0-9])$";
+
+    readonly fps: FPS;
+
     public hours: Hours;
     public minutes: Minutes;
     public seconds: Seconds;
@@ -43,6 +48,31 @@ class SMPTEtime {
 
     public getFrames(): Frames {
         return this.frames;
+    }
+
+    /**
+     * Creates a SMPTEtime from a timeString, returns null if timeString is invalid
+     */
+    public static createTimeFromString(timeString: string, fps: FPS): SMPTEtime | null{
+        const match = timeString.match(SMPTEtime.extractPattern);
+        if (match) {
+            const hours = Number(match[1]) as Hours;
+            const minutes = Number(match[2]) as Minutes;
+            const seconds = Number(match[3]) as Seconds;
+            const frames = Number(match[4]) as Frames;
+
+            try {
+                return new SMPTEtime(fps, hours, minutes, seconds, frames);
+            } catch {
+                return null
+            }
+        }
+        return null;
+    }
+
+    public toString() {
+        const pad = (num: number) => num.toString().padStart(2, '0');
+        return `${pad(this.hours)}:${pad(this.minutes)}:${pad(this.seconds)}:${pad(this.getFrames())}`;
     }
 }
 

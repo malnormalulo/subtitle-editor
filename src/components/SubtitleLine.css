@@ -1,3 +1,43 @@
 .subtitle-line-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
 
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.subtitle-line-times,
+.subtitle-line-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+}
+
+.subtitle-line-actions {
+  gap: 6px;
+}
+
+.subtitle-line-actions button {
+  cursor: pointer;
+  padding: 2px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.8em;
+}
+
+.subtitle-line-actions button:hover {
+  border-color: var(--accent-border);
+}
+
+.subtitle-line-content {
+  flex-basis: 100%;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }

@@ -1,0 +1,17 @@
+.time-input {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85em;
+}
+
+.time-input input {
+  width: 11ch;
+  padding: 2px 6px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font-family: var(--mono);
+  font-size: inherit;
+}

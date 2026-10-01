@@ -19,11 +19,11 @@ class Video extends Component<VideoProps> {
         return (
             <div className="video-container">
                 {!videoSrc && <div className="video-upload-container">
-                    <label htmlFor="videoInput" className="custom-file-upload">
+                    <label htmlFor="video-input" className="custom-file-upload">
                         Upload a video
                     </label>
                     <input
-                        id="videoInput"
+                        id="video-input"
                         type="file"
                         accept="video/mp4"
                         onChange={this.onFileChange}
