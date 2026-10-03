@@ -7,16 +7,16 @@ import {connect} from "react-redux";
 
 type StateProps = { subtitles: SubtLine[] };
 type DispatchProps = {};
-type EditorFeedProps = StateProps & DispatchProps;
+type SubtitlesFeedProps = StateProps & DispatchProps;
 
-class EditorFeed extends Component<EditorFeedProps> {
-    constructor(props: EditorFeedProps) {
+class SubtitlesFeed extends Component<SubtitlesFeedProps> {
+    constructor(props: SubtitlesFeedProps) {
         super(props)
     }
 
     render() {
         return (
-            <div id="editor-feed">
+            <div id="subtitles-feed">
                 {this.props.subtitles.map((line: SubtLine, index: number) =>
                     <SubtitleLine key={index} content={line.content} start={line.start} end={line.end}/>)}
             </div>
@@ -30,4 +30,4 @@ const mapStateToProps = (state: RootState): StateProps => ({
 
 const mapDispatchToProps: DispatchProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditorFeed);
+export default connect(mapStateToProps, mapDispatchToProps)(SubtitlesFeed);

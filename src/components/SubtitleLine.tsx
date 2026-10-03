@@ -2,6 +2,7 @@
 import './SubtitleLine.css'
 import SMPTEtime from "../utils/SMPTEtime.ts";
 import TimeInput from "./TimeInput.tsx";
+import LineContentEditor from "./LineContentEditor.tsx";
 
 type SubtitleLineProps = {
     content: string;
@@ -29,7 +30,10 @@ class SubtitleLine extends Component<SubtitleLineProps, SubtitleLineProps> {
                     <button type="button">Add after</button>
                     <button type="button">Delete</button>
                 </div>
-                <div className="subtitle-line-content">{this.state.content}</div>
+                <div className="subtitle-line-content">
+                    <LineContentEditor content={this.state.content}/>
+                </div>
+
             </div>
         )
     }

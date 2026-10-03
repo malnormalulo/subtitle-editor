@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import './App.css'
-import EditorFeed from "./components/EditorFeed.tsx";
+import SubtitlesFeed from "./components/SubbtitlesFeed.tsx";
 import Video from "./components/Video.tsx";
 
 type AppState = { count: number }
@@ -18,7 +18,7 @@ class App extends Component<object, AppState> {
 
         <section id="center">
           <Video/>
-          <EditorFeed/>
+          <SubtitlesFeed/>
         </section>
       </div>
     )
