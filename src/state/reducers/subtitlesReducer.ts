@@ -1,33 +1,66 @@
 ﻿import type {AnyAction} from "redux";
+import {
+    CREATE_LINE,
+    type CreateLineAction,
+    DELETE_LINE, type DeleteLineAction,
+    type NewLine,
+    UPDATE_LINE, type UpdateLineAction
+} from "../actions/subtitlesActions.ts";
+import {List} from "immutable";
+import {mergeIgnoringUndefined} from "../../utils/mergeIgnoringUndefined.ts";
 import SMPTEtime from "../../utils/SMPTEtime.ts";
 
-export type SubtLine = {
+export type Line = {
     id: number;
-    start: SMPTEtime;
-    end: SMPTEtime;
-    content: string;
+} & NewLine;
+
+function lineComparator(a: Line, b: Line): number {
+    return SMPTEtime.comparator(a.start, b.start)
 }
 
-export type SubtitlesState = SubtLine[];
+export type SubtitlesState = List<Line>;
 
-const INITIAL_STATE: SubtitlesState = [...Array(20).keys()].map((index) => {
-    const pad = (n: number) => n.toString().padStart(2, '0');
-    const startTime = SMPTEtime.createTimeFromString(`00:00:${pad(index * 2)}:00`, 24);
-    const endTime = SMPTEtime.createTimeFromString(`00:00:${pad(index * 2 + 1)}:00`, 24);
-    if (!startTime || !endTime)
-        throw new Error(`bad test time for line ${index}`);
-    return {
-        id: index,
-        start: startTime,
-        end: endTime,
-        content: `test content ${index + 1}`};
-});
+const INITIAL_STATE: SubtitlesState = List<Line>();
 
 function subtitlesReducer(state: SubtitlesState = INITIAL_STATE, action: AnyAction): SubtitlesState {
     switch (action.type) {
-        // case SET_VIDEO_SRC : {
-        //     return Object.assign({}, state, { src: (action as SetVideoSrcAction).src });
-        // }
+        case CREATE_LINE : {
+            const newLineProps = (action as CreateLineAction).line;
+            const nextId = state.isEmpty()
+                ? 1
+                : state.map(line => (line as Line).id).max() + 1;
+
+            const newLine = {id: nextId, ...newLineProps};
+
+            return state
+                .push(newLine)
+                .sort(lineComparator)
+                .toList();
+        }
+        case UPDATE_LINE : {
+            const updatedLineProps = (action as UpdateLineAction).line;
+            const id = updatedLineProps.id;
+
+            const lineIndex = state.findIndex(line => (line as Line).id == id);
+
+            if (lineIndex == -1)
+                return state;
+
+            return state
+                .update(lineIndex, line => mergeIgnoringUndefined(line, updatedLineProps))
+                .sort(lineComparator)
+                .toList();
+        }
+        case DELETE_LINE : {
+            const id = (action as DeleteLineAction).line.id;
+
+            const lineIndex = state.findIndex(line => (line as Line).id == id);
+
+            if (lineIndex == -1)
+                return state;
+
+            return state.delete(lineIndex);
+        }
         default :
             return state;
     }

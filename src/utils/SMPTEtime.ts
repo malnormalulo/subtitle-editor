@@ -54,7 +54,7 @@ class SMPTEtime {
     /**
      * Creates a SMPTEtime from a timeString, returns null if timeString is invalid
      */
-    public static createTimeFromString(timeString: string, fps: FPS): SMPTEtime | null{
+    public static createTimeFromString(timeString: string, fps: FPS): SMPTEtime | null {
         const match = timeString.match(SMPTEtime.extractPattern);
         if (match) {
             const hours = Number(match[1]) as Hours;
@@ -69,6 +69,16 @@ class SMPTEtime {
             }
         }
         return null;
+    }
+
+    public static comparator(a: SMPTEtime, b: SMPTEtime): number {
+        const aMetric = a.hours * 60 * 60 * 60 + a.minutes * 60 * 60 + a.seconds * 60 + a.frames;
+        const bMetric = b.hours * 60 * 60 * 60 + b.minutes * 60 * 60 + b.seconds * 60 + b.frames;
+        if (aMetric < bMetric)
+            return -1;
+        if (bMetric > aMetric)
+            return 1;
+        return 0;
     }
 
     public toString() {

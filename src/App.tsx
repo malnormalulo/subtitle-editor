@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import './App.css'
-import SubtitlesFeed from "./components/SubbtitlesFeed.tsx";
+import SubtitlesFeed from "./components/SubtitlesFeed.tsx";
 import Video from "./components/Video.tsx";
 
 type AppState = { count: number }

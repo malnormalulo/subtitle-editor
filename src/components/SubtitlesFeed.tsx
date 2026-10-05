@@ -1,11 +1,12 @@
 ﻿import {Component} from "react";
 import './EditorFeed.css'
 import SubtitleLine from "./SubtitleLine.tsx";
-import type {SubtLine} from "../state/reducers/subtitlesReducer.ts";
+import type {Line} from "../state/reducers/subtitlesReducer.ts";
 import type {RootState} from "../state/reducers/reducers.ts";
 import {connect} from "react-redux";
+import {List} from "immutable";
 
-type StateProps = { subtitles: SubtLine[] };
+type StateProps = { subtitles: List<Line>; };
 type DispatchProps = {};
 type SubtitlesFeedProps = StateProps & DispatchProps;
 
@@ -17,7 +18,7 @@ class SubtitlesFeed extends Component<SubtitlesFeedProps> {
     render() {
         return (
             <div id="subtitles-feed">
-                {this.props.subtitles.map((line: SubtLine, index: number) =>
+                {this.props.subtitles.toArray().map((line: Line, index: number) =>
                     <SubtitleLine key={index} content={line.content} start={line.start} end={line.end}/>)}
             </div>
         )
