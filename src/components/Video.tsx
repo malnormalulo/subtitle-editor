@@ -1,11 +1,13 @@
 ﻿import {Component} from "react";
 import {connect} from "react-redux";
 import './Video.css'
-import {setVideoSrc} from "../state/actions.ts";
+import {setVideoAttributes} from "../state/actions/videoActions.ts";
 import type {RootState} from "../state/reducers/reducers.ts";
+import type {FPS} from "../utils/SMPTEtime.ts";
+import {getVideoFps} from "../utils/getFps.ts";
 
 type StateProps = { videoSrc: string | null };
-type DispatchProps = { setVideoSrc: (src: string | null) => void };
+type DispatchProps = { setVideoAttributes: (src: string | null, fps: FPS | null) => void };
 type VideoProps = StateProps & DispatchProps;
 
 class Video extends Component<VideoProps> {
@@ -35,10 +37,14 @@ class Video extends Component<VideoProps> {
         )
     }
 
-    onFileChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    async onFileChange(event: React.ChangeEvent<HTMLInputElement>): Promise<void> {
         const file = event.target.files?.[0];
+
         if (file) {
-            this.props.setVideoSrc(URL.createObjectURL(file));
+            const src = URL.createObjectURL(file);
+            const fps = await getVideoFps(file);
+
+            this.props.setVideoAttributes(src, (fps as unknown) as FPS | null);
         }
     }
 }
@@ -47,6 +53,6 @@ const mapStateToProps = (state: RootState): StateProps => ({
     videoSrc: state.video.src
 });
 
-const mapDispatchToProps: DispatchProps = { setVideoSrc };
+const mapDispatchToProps: DispatchProps = { setVideoAttributes: setVideoAttributes };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Video);

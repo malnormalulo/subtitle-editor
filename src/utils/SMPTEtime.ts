@@ -8,12 +8,13 @@ type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] exte
 
 type IntRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>
 
+
 type Hours = IntRange<0, 100>   //[0, 99)
 type Minutes = IntRange<0, 60>  //[0, 59)
 type Seconds = IntRange<0, 60>  //[0, 59)
 type Frames = IntRange<0, 60>  //[0, 59)
 
-type FPS = 23.976 | 24 | 25 | 29.97 | 30 | 50 | 59.94 | 60;
+export type FPS = 23.976 | 24 | 25 | 29.97 | 30 | 50 | 59.94 | 60;
 
 class SMPTEtime {
     // format 00:00:00:00
