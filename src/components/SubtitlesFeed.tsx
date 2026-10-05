@@ -1,5 +1,5 @@
 ﻿import {Component} from "react";
-import './EditorFeed.css'
+import './SubtitlesFeed.css'
 import SubtitleLine from "./SubtitleLine.tsx";
 import type {Line} from "../state/reducers/subtitlesReducer.ts";
 import type {RootState} from "../state/reducers/reducers.ts";
