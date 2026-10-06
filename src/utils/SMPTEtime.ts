@@ -33,22 +33,33 @@ class SMPTEtime {
         this.hours = hours;
         this.minutes = minutes;
         this.seconds = seconds;
-        this.frames = 0;
-        this.setFrames(frames);
+        this.frames = SMPTEtime.correctFrames(this.fps, this.minutes, this.seconds, frames);
     }
 
     public setFrames(frames: Frames) {
-        const maxFrames = Math.ceil(this.fps);
-
-        if (frames >= 0 && frames < maxFrames) {
-            this.frames = frames;
-        } else {
-            throw new RangeError(`Provided frames (${frames}) is out of range for FPS ${this.fps}`);
-        }
+        this.frames = SMPTEtime.correctFrames(this.fps, this.minutes, this.seconds, frames);
     }
 
     public getFrames(): Frames {
         return this.frames;
+    }
+
+    public static correctFrames(fps: FPS, minutes: Minutes, seconds: Seconds, frames: Frames): Frames {
+        const maxFrames = Math.ceil(fps);
+
+        if (frames >= 0 && frames < maxFrames) {
+            // drop-frame: only for 29.97 (skip frames 0-1) and 59.94 (skip frames 0-3)
+            // at second 0 of any minute except 0, 10, 20, 30, 40, 50
+            // 23.976 has no drop-frame
+            const droppedFrames = fps === 29.97 ? 2 : fps === 59.94 ? 4 : 0;
+
+            if (seconds === 0 && minutes % 10 !== 0 && frames < droppedFrames)
+                return droppedFrames as Frames;
+            else
+                return frames;
+        } else {
+            throw new RangeError(`Provided frames (${frames}) is out of range for FPS ${fps}`);
+        }
     }
 
     /**
@@ -76,7 +87,7 @@ class SMPTEtime {
         const bMetric = b.hours * 60 * 60 * 60 + b.minutes * 60 * 60 + b.seconds * 60 + b.frames;
         if (aMetric < bMetric)
             return -1;
-        if (bMetric > aMetric)
+        if (aMetric > bMetric)
             return 1;
         return 0;
     }
