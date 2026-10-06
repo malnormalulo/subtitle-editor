@@ -1,4 +1,4 @@
-﻿import React, {Component} from "react";
+﻿import {Component} from "react";
 import './SubtitlesFeed.css'
 import SubtitleLine from "./SubtitleLine.tsx";
 import type {Line} from "../state/reducers/subtitlesReducer.ts";
@@ -41,13 +41,21 @@ class SubtitlesFeed extends Component<SubtitlesFeedProps> {
                         Add line
                     </button>
                 </div>}
-                {this.props.subtitles.toArray().map((line: Line) =>
-                    <SubtitleLine key={line.id}id={line.id} content={line.content} start={line.start} end={line.end}/>)}
+                {this.props.subtitles.toArray().map((line: Line, index: number, lines: Line[]) =>
+                    <SubtitleLine
+                        key={line.id}
+                        id={line.id}
+                        content={line.content}
+                        start={line.start}
+                        end={line.end}
+                        prevEnd={lines[index - 1]?.end}
+                        nextStart={lines[index + 1]?.start}
+                    />)}
             </div>
         )
     }
 
-    private onClick(_: React.MouseEvent<HTMLButtonElement>) {
+    private onClick() {
         const newLineStart = new SMPTEtime(this.props.videoFps!, 0, 0, 0, 0);
         const newLineEnd = new SMPTEtime(this.props.videoFps!, 0, 0, 1, 0);
         const newLineContent = "";

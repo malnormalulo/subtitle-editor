@@ -13,7 +13,7 @@ import SMPTEtime from "../../utils/SMPTEtime.ts";
 export type Line = ID_PROPERTY & NewLine;
 
 function lineComparator(a: Line, b: Line): number {
-    return SMPTEtime.comparator(a.start, b.start)
+    return SMPTEtime.comparator(a.start, b.start) || SMPTEtime.comparator(a.end, b.end);
 }
 
 export type SubtitlesState = List<Line>;

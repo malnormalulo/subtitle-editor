@@ -92,6 +92,29 @@ class SMPTEtime {
         return 0;
     }
 
+    public static min(a: SMPTEtime, b: SMPTEtime): SMPTEtime {
+        return SMPTEtime.comparator(a, b) <= 0 ? a : b;
+    }
+
+    public static max(a: SMPTEtime, b: SMPTEtime): SMPTEtime {
+        return SMPTEtime.comparator(a, b) >= 0 ? a : b;
+    }
+
+    public addSeconds(seconds: number): SMPTEtime {
+        const totalSeconds = (this.hours * 60 + this.minutes) * 60 + this.seconds + seconds;
+
+        if (totalSeconds < 0)
+            return new SMPTEtime(this.fps, 0, 0, 0, 0);
+
+        return new SMPTEtime(
+            this.fps,
+            Math.floor(totalSeconds / 3600) as Hours,
+            Math.floor(totalSeconds / 60) % 60 as Minutes,
+            totalSeconds % 60 as Seconds,
+            this.frames
+        );
+    }
+
     public toString() {
         const pad = (num: number) => num.toString().padStart(2, '0');
         return `${pad(this.hours)}:${pad(this.minutes)}:${pad(this.seconds)}:${pad(this.getFrames())}`;
