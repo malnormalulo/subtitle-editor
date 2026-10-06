@@ -2,7 +2,7 @@
 import {
     CREATE_LINE,
     type CreateLineAction,
-    DELETE_LINE, type DeleteLineAction,
+    DELETE_LINE, type DeleteLineAction, type ID_PROPERTY,
     type NewLine,
     UPDATE_LINE, type UpdateLineAction
 } from "../actions/subtitlesActions.ts";
@@ -10,9 +10,7 @@ import {List} from "immutable";
 import {mergeIgnoringUndefined} from "../../utils/mergeIgnoringUndefined.ts";
 import SMPTEtime from "../../utils/SMPTEtime.ts";
 
-export type Line = {
-    id: number;
-} & NewLine;
+export type Line = ID_PROPERTY & NewLine;
 
 function lineComparator(a: Line, b: Line): number {
     return SMPTEtime.comparator(a.start, b.start)

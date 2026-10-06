@@ -15,3 +15,13 @@
   font-family: var(--mono);
   font-size: inherit;
 }
+
+.time-input input:focus-visible {
+  outline: 2px solid var(--accent-border);
+  outline-offset: 1px;
+}
+
+.time-input input[aria-invalid="true"] {
+  border-color: #d93025;
+  outline-color: #d93025;
+}

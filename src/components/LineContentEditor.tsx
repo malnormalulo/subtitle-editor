@@ -1,8 +1,15 @@
 ﻿import {Component} from "react";
 import {ContentState, Editor, EditorState} from "draft-js";
+import {type ID_PROPERTY, updateLine, type UpdateLine} from "../state/actions/subtitlesActions.ts";
+import './LineContentEditor.css'
+import {connect} from "react-redux";
 
-type StateProps = { content: string };
-type DispatchProps = {};
+type StateProps = {
+    content: string;
+} & ID_PROPERTY;
+type DispatchProps = {
+    updateLine: (line: UpdateLine) => void;
+};
 type LineContentEditorProps = StateProps & DispatchProps;
 
 type LineContentEditorState = {
@@ -23,14 +30,19 @@ class LineContentEditor extends Component<LineContentEditorProps, LineContentEdi
                 <Editor
                     editorState={this.state.editorState}
                     onChange={this.onChange}
+                    spellCheck={true}
                 />
             </div>
         )
     }
 
-    onChange (editorState: EditorState) {
+    onChange(editorState: EditorState) {
+        this.props.updateLine({id: this.props.id, content: editorState.getCurrentContent().getPlainText()})
         this.setState({editorState});
     }
 }
 
-export default LineContentEditor;
+
+const mapDispatchToProps: DispatchProps = {updateLine: updateLine};
+
+export default connect(null, mapDispatchToProps)(LineContentEditor);

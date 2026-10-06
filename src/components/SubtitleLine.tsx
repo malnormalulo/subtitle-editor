@@ -3,27 +3,27 @@ import './SubtitleLine.css'
 import SMPTEtime from "../utils/SMPTEtime.ts";
 import TimeInput from "./TimeInput.tsx";
 import LineContentEditor from "./LineContentEditor.tsx";
+import type {ID_PROPERTY} from "../state/actions/subtitlesActions.ts";
 
 type SubtitleLineProps = {
     content: string;
     start: SMPTEtime;
     end: SMPTEtime;
-};
+} & ID_PROPERTY;
 
-class SubtitleLine extends Component<SubtitleLineProps, SubtitleLineProps> {
+class SubtitleLine extends Component<SubtitleLineProps, object> {
     constructor(props: SubtitleLineProps) {
         super(props);
-        this.state = props;
-
-        // this.onTimeFieldChange = this.onTimeFieldChange.bind(this)
     }
 
     render() {
+        const id = this.props.id;
+
         return (
             <div className="subtitle-line-container">
                 <div className="subtitle-line-times">
-                    <TimeInput label="start:" time={this.state.start}/>
-                    <TimeInput label="end:" time={this.state.end}/>
+                    <TimeInput id={id} isStart={true} time={this.props.start} max={this.props.end}/>
+                    <TimeInput id={id} isStart={false} time={this.props.end} min={this.props.start}/>
                 </div>
                 <div className="subtitle-line-actions">
                     <button type="button">Add before</button>
@@ -31,22 +31,11 @@ class SubtitleLine extends Component<SubtitleLineProps, SubtitleLineProps> {
                     <button type="button">Delete</button>
                 </div>
                 <div className="subtitle-line-content">
-                    <LineContentEditor content={this.state.content}/>
+                    <LineContentEditor id={id} content={this.props.content}/>
                 </div>
-
             </div>
         )
     }
-
-    // private onTimeFieldChange(event: React.ChangeEvent<HTMLInputElement>) {
-    //     const newValue = event.currentTarget.value;
-    //     const newTime = SMPTEtime.createTimeFromString(newValue, this.state.start.fps);
-    //
-    //     if (newTime)
-    //         console.log(newTime)
-    //     else
-    //         console.log(`invalid: ${newValue}`)
-    // }
 }
 
 export default SubtitleLine;
