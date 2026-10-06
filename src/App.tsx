@@ -14,8 +14,6 @@ class App extends Component<object, AppState> {
   render() {
     return (
       <div className="app">
-        <section id="header"><h3>subtitle-editor-header</h3></section>
-
         <section id="center">
           <Video/>
           <SubtitlesFeed/>
