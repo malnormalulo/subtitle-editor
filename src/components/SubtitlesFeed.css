@@ -13,3 +13,52 @@
   padding: 16px;
   text-align: start;
 }
+
+#actions-bar {
+  position: sticky;
+  top: -16px;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin: -16px -16px 0;
+  padding: 16px 16px 8px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  font-size: 0.85em;
+}
+
+#search-bar {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+#search-bar:focus-visible,
+#add-line-button:focus-visible {
+  outline: 2px solid var(--accent-border);
+  outline-offset: 1px;
+}
+
+#add-line-button {
+  flex: none;
+  margin-left: auto;
+  cursor: pointer;
+  padding: 4px 14px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+#add-line-button:hover {
+  border-color: var(--accent-border);
+}
