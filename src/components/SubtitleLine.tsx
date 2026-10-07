@@ -40,6 +40,10 @@ class SubtitleLine extends Component<SubtitleLineProps, object> {
             <div className="subtitle-line-container">
                 <div className="subtitle-line-times">
                     <TimeInput id={id} isStart={true} time={this.props.start} max={this.props.end}/>
+                    <span className="subtitle-line-duration">
+                        duration:
+                        <span>{SMPTEtime.subtract(this.props.end, this.props.start).toString()}</span>
+                    </span>
                     <TimeInput id={id} isStart={false} time={this.props.end} min={this.props.start}/>
                 </div>
                 <div className="subtitle-line-actions">

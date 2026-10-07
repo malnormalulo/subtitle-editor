@@ -44,6 +44,21 @@ class SMPTEtime {
         return this.frames;
     }
 
+    public addSeconds(seconds: number): SMPTEtime {
+        const totalSeconds = (this.hours * 60 + this.minutes) * 60 + this.seconds + seconds;
+
+        if (totalSeconds < 0)
+            return new SMPTEtime(this.fps, 0, 0, 0, 0);
+
+        return new SMPTEtime(
+            this.fps,
+            Math.floor(totalSeconds / 3600) as Hours,
+            Math.floor(totalSeconds / 60) % 60 as Minutes,
+            totalSeconds % 60 as Seconds,
+            this.frames
+        );
+    }
+
     public static correctFrames(fps: FPS, minutes: Minutes, seconds: Seconds, frames: Frames): Frames {
         const maxFrames = Math.ceil(fps);
 
@@ -100,19 +115,44 @@ class SMPTEtime {
         return SMPTEtime.comparator(a, b) >= 0 ? a : b;
     }
 
-    public addSeconds(seconds: number): SMPTEtime {
-        const totalSeconds = (this.hours * 60 + this.minutes) * 60 + this.seconds + seconds;
+    public static subtract(a: SMPTEtime, b: SMPTEtime): SMPTEtime {
+        if(a.fps !== b.fps)
+            throw new Error(`FPS should be the same: a(${a.fps}), b(${b.fps})`)
+        if(SMPTEtime.comparator(a, b) < 0)
+            throw new Error(`a(${a.toString()}) should be bigger than b(${b.toString()})`);
 
-        if (totalSeconds < 0)
-            return new SMPTEtime(this.fps, 0, 0, 0, 0);
+        const halfAdder = (
+            opA: number,
+            opB: number,
+            inCarry: number,
+            numSys: number = 60
+        ): {res: number, outCarry: number} => {
+            let res = opA + opB + inCarry;
+            let outCarry = 0;
+
+            if(res >= numSys) {
+                outCarry = 1;
+                res -= numSys;
+            } else if (res < 0){
+                outCarry = -1;
+                res += numSys;
+            }
+
+            return {res: res, outCarry: outCarry}
+        }
+
+        const frames = halfAdder(a.frames, -b.frames, 0, Math.ceil(a.fps));
+        const seconds = halfAdder(a.seconds, -b.seconds, frames.outCarry);
+        const minutes = halfAdder(a.minutes, -b.minutes, seconds.outCarry);
+        const hours = halfAdder(a.hours, -b.hours, minutes.outCarry, 100);
 
         return new SMPTEtime(
-            this.fps,
-            Math.floor(totalSeconds / 3600) as Hours,
-            Math.floor(totalSeconds / 60) % 60 as Minutes,
-            totalSeconds % 60 as Seconds,
-            this.frames
-        );
+            a.fps,
+            hours.res as Hours,
+            minutes.res as Minutes,
+            seconds.res as Seconds,
+            frames.res as Frames
+        )
     }
 
     public toString() {
