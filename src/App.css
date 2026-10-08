@@ -4,8 +4,8 @@
   flex-direction: row;
   align-items: stretch;
   min-height: 0;
-  padding: 16px 12px;
-  gap: 12px;
+  padding: 0px;
+  gap: 0px;
   box-sizing: border-box;
 
   @media (max-width: 720px) {

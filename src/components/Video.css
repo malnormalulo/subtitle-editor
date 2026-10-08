@@ -6,13 +6,12 @@
   height: 320px;
   min-width: 220px;
   min-height: 140px;
-  max-width: 100%;
+  max-width: 70%;
 
   resize: both;
   overflow: hidden;
 
   border: 1px solid var(--border);
-  border-radius: 8px;
   background: repeating-linear-gradient(
           -55deg,
           var(--dashed-bg-1),
@@ -26,9 +25,9 @@
   align-items: center;
 
   @media (max-width: 720px) {
+    max-width: 100%;
     align-self: stretch;
     width: 100%;
-    resize: vertical;
   }
 }
 
