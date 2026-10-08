@@ -1,4 +1,4 @@
-﻿import {Component} from "react";
+﻿import React, {Component} from "react";
 import './SubtitlesFeed.css'
 import SubtitleLine from "./SubtitleLine.tsx";
 import type {Line} from "../state/reducers/subtitlesReducer.ts";
@@ -7,6 +7,10 @@ import {connect} from "react-redux";
 import {List} from "immutable";
 import SMPTEtime, {type FPS} from "../utils/SMPTEtime.ts";
 import {createLine, type NewLine} from "../state/actions/subtitlesActions.ts";
+
+type SubtitlesFeedState = {
+    searchTerm?: string
+}
 
 type StateProps = {
     subtitles: List<Line>;
@@ -17,14 +21,23 @@ type DispatchProps = {
 };
 type SubtitlesFeedProps = StateProps & DispatchProps;
 
-class SubtitlesFeed extends Component<SubtitlesFeedProps> {
+class SubtitlesFeed extends Component<SubtitlesFeedProps, SubtitlesFeedState> {
     constructor(props: SubtitlesFeedProps) {
         super(props);
 
+        this.state = {searchTerm: undefined}
+
         this.onClick = this.onClick.bind(this);
+        this.onSearch = this.onSearch.bind(this);
     }
 
     render() {
+        const subsListToDisplay = this.state.searchTerm
+            ? this.props.subtitles.filter(
+                line => line!.content.toLowerCase().includes(this.state.searchTerm!))
+                .toList()
+            : this.props.subtitles;
+
         return (
             <div id="subtitles-feed">
                 {this.props.videoFps && <div id="actions-bar">
@@ -32,6 +45,7 @@ class SubtitlesFeed extends Component<SubtitlesFeedProps> {
                         type="text"
                         id="search-bar"
                         placeholder="search"
+                        onChange={this.onSearch}
                     />}
                     <button
                         type="button"
@@ -41,7 +55,7 @@ class SubtitlesFeed extends Component<SubtitlesFeedProps> {
                         Add line
                     </button>
                 </div>}
-                {this.props.subtitles.toArray().map((line: Line, index: number, lines: Line[]) =>
+                {subsListToDisplay.toArray().map((line: Line, index: number, lines: Line[]) =>
                     <SubtitleLine
                         key={line.id}
                         id={line.id}
@@ -65,6 +79,10 @@ class SubtitlesFeed extends Component<SubtitlesFeedProps> {
             end: newLineEnd,
             content: newLineContent
         });
+    }
+
+    private onSearch(event: React.ChangeEvent<HTMLInputElement>) {
+        this.setState({searchTerm: event.currentTarget.value.toLowerCase()})
     }
 }
 
