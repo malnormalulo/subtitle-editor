@@ -59,6 +59,10 @@ class SMPTEtime {
         );
     }
 
+    public toSeconds(): number {
+        return (this.hours * 60 + this.minutes) * 60 + this.seconds + this.frames / this.fps;
+    }
+
     public static correctFrames(fps: FPS, minutes: Minutes, seconds: Seconds, frames: Frames): Frames {
         const maxFrames = Math.ceil(fps);
 

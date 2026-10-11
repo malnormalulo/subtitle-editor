@@ -7,8 +7,12 @@ import {
     updateLine
 } from "../state/actions/subtitlesActions.ts";
 import {connect} from "react-redux";
+import {type ActiveLine, setActiveLine} from "../state/actions/activeLineActions.ts";
 
-type DispatchProps = { updateLine: (line: UpdateLine) => void };
+type DispatchProps = {
+    updateLine: (line: UpdateLine) => void;
+    setActiveLine: (line: ActiveLine) => void;
+};
 
 type TimeInputProps = {
     isStart: boolean;
@@ -30,6 +34,7 @@ class TimeInput extends Component<TimeInputProps, TimeInputState> {
 
         this.onChange = this.onChange.bind(this)
         this.onBlur = this.onBlur.bind(this)
+        this.onFocus = this.onFocus.bind(this)
     }
 
     componentDidUpdate(prevProps: TimeInputProps) {
@@ -48,6 +53,7 @@ class TimeInput extends Component<TimeInputProps, TimeInputState> {
                     aria-invalid={this.state.isInvalid}
                     onChange={this.onChange}
                     onBlur={this.onBlur}
+                    onFocus={this.onFocus}
                 />
             </label>
         )
@@ -71,7 +77,7 @@ class TimeInput extends Component<TimeInputProps, TimeInputState> {
     private onChange(event: React.ChangeEvent<HTMLInputElement>) {
         const value = event.currentTarget.value;
         this.setState({
-            value:value,
+            value: value,
             isInvalid: this.parseTime(value) === null
         });
     }
@@ -94,8 +100,15 @@ class TimeInput extends Component<TimeInputProps, TimeInputState> {
             ? {id: this.props.id, start: newTime}
             : {id: this.props.id, end: newTime})
     }
+
+    private onFocus() {
+        this.props.setActiveLine({id: this.props.id})
+    }
 }
 
-const mapDispatchToProps: DispatchProps = {updateLine: updateLine};
+const mapDispatchToProps: DispatchProps = {
+    updateLine: updateLine,
+    setActiveLine: setActiveLine
+};
 
 export default connect(null, mapDispatchToProps)(TimeInput);

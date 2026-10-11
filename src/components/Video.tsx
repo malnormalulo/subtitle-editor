@@ -1,4 +1,4 @@
-﻿import {Component} from "react";
+﻿import {Component, createRef} from "react";
 import {connect} from "react-redux";
 import './Video.css'
 import {setVideoAttributes} from "../state/actions/videoActions.ts";
@@ -7,22 +7,34 @@ import type {FPS} from "../utils/SMPTEtime.ts";
 import {getVideoFps} from "../utils/getFps.ts";
 import VideoOverlay from "./VideoOverlay.tsx";
 
-type StateProps = { videoSrc: string | null };
-type DispatchProps = { setVideoAttributes: (src: string | null, fps: FPS | null) => void };
+type StateProps = {
+    src?: string;
+    currentTime?: number;
+};
+type DispatchProps = {
+    setVideoAttributes: (src: string | undefined, fps: FPS | undefined, currentTime: number | undefined) => void;
+};
 type VideoProps = StateProps & DispatchProps;
 
 class Video extends Component<VideoProps> {
+    private videoRef = createRef<HTMLVideoElement>();
+
     constructor(props: VideoProps) {
-        super(props)
+        super(props);
+
         this.onFileChange = this.onFileChange.bind(this);
         this.onTimeUpdate = this.onTimeUpdate.bind(this);
     }
 
     render() {
-        const {videoSrc} = this.props;
+        const {src, currentTime} = this.props;
+
+        if (currentTime !== undefined && this.videoRef.current && this.videoRef.current.currentTime !== currentTime)
+            this.videoRef.current.currentTime = currentTime;
+
         return (
             <div className="video-container">
-                {!videoSrc && <div className="video-upload-container">
+                {!src && <div className="video-upload-container">
                     <label htmlFor="video-input" className="custom-file-upload">
                         Upload a video
                     </label>
@@ -34,8 +46,13 @@ class Video extends Component<VideoProps> {
                         style={{ display: 'none' }}
                     />
                 </div>}
-                {videoSrc && <video src={videoSrc} onTimeUpdate={this.onTimeUpdate} controls/>}
-                {videoSrc && <VideoOverlay/>}
+                {src && <video
+                    src={src}
+                    ref={this.videoRef}
+                    onTimeUpdate={this.onTimeUpdate}
+                    controls
+                />}
+                {src && <VideoOverlay/>}
             </div>
         )
     }
@@ -47,17 +64,18 @@ class Video extends Component<VideoProps> {
             const src = URL.createObjectURL(file);
             const fps = await getVideoFps(file);
 
-            this.props.setVideoAttributes(src, (fps as unknown) as FPS | null);
+            this.props.setVideoAttributes(src, (fps as unknown) as FPS, 0);
         }
     }
 
     private onTimeUpdate(event: React.SyntheticEvent<HTMLVideoElement, Event>){
-        console.log(event.currentTarget.currentTime);
+        this.props.setVideoAttributes(undefined, undefined, event.currentTarget.currentTime);
     }
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-    videoSrc: state.video.src
+    src: state.video.src,
+    currentTime: state.video.currentTime
 });
 
 const mapDispatchToProps: DispatchProps = { setVideoAttributes: setVideoAttributes };
