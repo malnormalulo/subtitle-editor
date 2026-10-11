@@ -1,0 +1,9 @@
+.rich-editor-toolbar {
+  margin-bottom: 6px;
+}
+
+.rich-editor-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}

@@ -1,6 +1,7 @@
 ﻿import {type DraftInlineStyleType, type EditorState} from "draft-js";
 import {Component} from "react";
 import StyleButton from "./StyleButton.tsx";
+import './EditorToolbar.css'
 
 // https://stackblitz.com/edit/react-draft-js-demo
 

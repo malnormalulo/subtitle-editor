@@ -1,0 +1,25 @@
+.rich-editor-style-button {
+  cursor: pointer;
+  padding: 2px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 0.8em;
+}
+
+.rich-editor-style-button:hover {
+  border-color: var(--accent-border);
+}
+
+.rich-editor-style-button:focus-visible {
+  outline: 2px solid var(--accent-border);
+  outline-offset: 1px;
+}
+
+.rich-editor-style-button[aria-pressed="true"] {
+  border-color: var(--accent-border);
+  background: color-mix(in srgb, var(--accent-border) 25%, transparent);
+  color: var(--button-bg);
+}

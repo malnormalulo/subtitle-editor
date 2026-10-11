@@ -1,5 +1,6 @@
 ﻿import {Component} from "react";
 import type {DraftInlineStyleType} from "draft-js";
+import './StyleButton.css'
 
 type StyleButtonProps = {
     active: boolean;
@@ -9,8 +10,6 @@ type StyleButtonProps = {
 }
 
 class StyleButton extends Component<StyleButtonProps> {
-    // private preventFocusChange = (event: React.MouseEvent<HTMLButtonElement>) =>
-    //     event.preventDefault();
 
     constructor(props: StyleButtonProps) {
         super(props);
@@ -23,7 +22,6 @@ class StyleButton extends Component<StyleButtonProps> {
                 type="button"
                 className="rich-editor-style-button"
                 aria-pressed={active}
-                // onMouseDown={this.preventFocusChange}
                 onClick={() => this.props.onToggle(this.props.style as DraftInlineStyleType)}
             >
                 {label}
