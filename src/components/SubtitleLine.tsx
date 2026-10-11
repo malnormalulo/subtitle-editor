@@ -2,7 +2,7 @@
 import './SubtitleLine.css'
 import SMPTEtime from "../utils/SMPTEtime.ts";
 import TimeInput from "./TimeInput.tsx";
-import LineContentEditor from "./LineContentEditor.tsx";
+import LineContentEditor from "./editor/LineContentEditor.tsx";
 import {
     createLine,
     type DeleteLine,

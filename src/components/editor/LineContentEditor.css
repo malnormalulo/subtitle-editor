@@ -4,8 +4,11 @@ div.DraftEditor-root {
     border-radius: 6px;
     background-color: beige;
     overflow-y: auto;
+    max-height: 5.9em;
 }
 div.DraftEditor-editorContainer,
 div.public-DraftEditor-content {
     height: 100%;
+    padding: 0 2px;
+    overflow-wrap: break-word;
 }

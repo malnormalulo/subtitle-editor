@@ -1,8 +1,9 @@
 ﻿import {Component} from "react";
-import {ContentState, Editor, EditorState} from "draft-js";
-import {type ID_PROPERTY, updateLine, type UpdateLine} from "../state/actions/subtitlesActions.ts";
+import {ContentState, type DraftInlineStyleType, Editor, EditorState, RichUtils} from "draft-js";
+import {type ID_PROPERTY, updateLine, type UpdateLine} from "../../state/actions/subtitlesActions.ts";
 import './LineContentEditor.css'
 import {connect} from "react-redux";
+import EditorToolbar from "./EditorToolbar.tsx";
 
 type StateProps = {
     content: string;
@@ -27,6 +28,10 @@ class LineContentEditor extends Component<LineContentEditorProps, LineContentEdi
     render() {
         return (
             <div>
+                <EditorToolbar
+                    editorState={this.state.editorState}
+                    onToggleInline={this.toggleInlineStyle}
+                />
                 <Editor
                     editorState={this.state.editorState}
                     onChange={this.onChange}
@@ -35,6 +40,17 @@ class LineContentEditor extends Component<LineContentEditorProps, LineContentEdi
             </div>
         )
     }
+
+    private toggleInlineStyle = (style: DraftInlineStyleType) => {
+        this.onChange(RichUtils.toggleInlineStyle(this.focusSelection(), style));
+    };
+
+    private focusSelection = () => {
+        const editorState = this.state.editorState;
+        return editorState.getSelection().getHasFocus()
+            ? editorState
+            : EditorState.forceSelection(editorState, editorState.getSelection());
+    };
 
     onChange(editorState: EditorState) {
         this.props.updateLine({id: this.props.id, content: editorState.getCurrentContent().getPlainText()})
