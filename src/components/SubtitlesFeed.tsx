@@ -7,6 +7,7 @@ import {connect} from "react-redux";
 import {List} from "immutable";
 import SMPTEtime, {type FPS} from "../utils/SMPTEtime.ts";
 import {createLine, type NewLine} from "../state/actions/subtitlesActions.ts";
+import {ContentState, convertFromRaw, convertToRaw} from "draft-js";
 
 type SubtitlesFeedState = {
     searchTerm?: string
@@ -14,7 +15,7 @@ type SubtitlesFeedState = {
 
 type StateProps = {
     subtitles: List<Line>;
-    videoFps: FPS | null;
+    videoFps: FPS | undefined;
 };
 type DispatchProps = {
     createLine: (line: NewLine) => void;
@@ -32,9 +33,13 @@ class SubtitlesFeed extends Component<SubtitlesFeedProps, SubtitlesFeedState> {
     }
 
     render() {
+
         const subsListToDisplay = this.state.searchTerm
             ? this.props.subtitles.filter(
-                line => line!.content.toLowerCase().includes(this.state.searchTerm!))
+                line => convertFromRaw(line!.rawContentState)
+                    .getPlainText()
+                    .toLowerCase()
+                    .includes(this.state.searchTerm!))
                 .toList()
             : this.props.subtitles;
 
@@ -59,7 +64,7 @@ class SubtitlesFeed extends Component<SubtitlesFeedProps, SubtitlesFeedState> {
                     <SubtitleLine
                         key={line.id}
                         id={line.id}
-                        content={line.content}
+                        rawContentState={line.rawContentState}
                         start={line.start}
                         end={line.end}
                         prevEnd={lines[index - 1]?.end}
@@ -72,12 +77,12 @@ class SubtitlesFeed extends Component<SubtitlesFeedProps, SubtitlesFeedState> {
     private onClick() {
         const newLineStart = new SMPTEtime(this.props.videoFps!, 0, 0, 0, 0);
         const newLineEnd = new SMPTEtime(this.props.videoFps!, 0, 0, 1, 0);
-        const newLineContent = "";
+        const newLineContent = convertToRaw(ContentState.createFromText(""));
 
         this.props.createLine({
             start: newLineStart,
             end: newLineEnd,
-            content: newLineContent
+            rawContentState: newLineContent
         });
     }
 

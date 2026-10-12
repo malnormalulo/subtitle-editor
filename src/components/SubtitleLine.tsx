@@ -11,6 +11,7 @@ import {
     type NewLine
 } from "../state/actions/subtitlesActions.ts";
 import {connect} from "react-redux";
+import {ContentState, convertToRaw, type RawDraftContentState} from "draft-js";
 
 type DispatchProps = {
     deleteLine: (line: DeleteLine) => void;
@@ -18,7 +19,7 @@ type DispatchProps = {
 };
 
 type SubtitleLineProps = {
-    content: string;
+    rawContentState: RawDraftContentState; // https://learn-draftjs-now.vercel.app/content-state
     start: SMPTEtime;
     end: SMPTEtime;
     prevEnd?: SMPTEtime;
@@ -52,7 +53,7 @@ class SubtitleLine extends Component<SubtitleLineProps, object> {
                     <button type="button" onClick={this.onDelete}>Delete</button>
                 </div>
                 <div className="subtitle-line-content">
-                    <LineContentEditor id={id} content={this.props.content}/>
+                    <LineContentEditor id={id} rawContentState={this.props.rawContentState}/>
                 </div>
             </div>
         )
@@ -75,12 +76,12 @@ class SubtitleLine extends Component<SubtitleLineProps, object> {
                 : newLineStart.addSeconds(1);
         }
 
-        const newLineContent = "";
+        const newLineContent = convertToRaw(ContentState.createFromText(""));
 
         this.props.createLine({
             start: newLineStart,
             end: newLineEnd,
-            content: newLineContent
+            rawContentState: newLineContent
         });
     }
 

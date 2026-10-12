@@ -1,5 +1,13 @@
 ﻿import {Component} from "react";
-import {ContentState, type DraftInlineStyleType, Editor, EditorState, RichUtils} from "draft-js";
+import {
+    convertFromRaw,
+    convertToRaw,
+    type DraftInlineStyleType,
+    Editor,
+    EditorState,
+    type RawDraftContentState,
+    RichUtils
+} from "draft-js";
 import {type ID_PROPERTY, updateLine, type UpdateLine} from "../../state/actions/subtitlesActions.ts";
 import './LineContentEditor.css'
 import {connect} from "react-redux";
@@ -7,7 +15,7 @@ import EditorToolbar from "./EditorToolbar.tsx";
 import {type ActiveLine, setActiveLine} from "../../state/actions/activeLineActions.ts";
 
 type StateProps = {
-    content: string;
+    rawContentState: RawDraftContentState;
 } & ID_PROPERTY;
 type DispatchProps = {
     updateLine: (line: UpdateLine) => void;
@@ -22,7 +30,7 @@ type LineContentEditorState = {
 class LineContentEditor extends Component<LineContentEditorProps, LineContentEditorState> {
     constructor(props: LineContentEditorProps) {
         super(props)
-        this.state = {editorState: EditorState.createWithContent(ContentState.createFromText(this.props.content))};
+        this.state = {editorState: EditorState.createWithContent(convertFromRaw(this.props.rawContentState))};
 
         this.onChange = this.onChange.bind(this);
         this.toggleInlineStyle = this.toggleInlineStyle.bind(this);
@@ -59,7 +67,10 @@ class LineContentEditor extends Component<LineContentEditorProps, LineContentEdi
     };
 
     onChange(editorState: EditorState) {
-        this.props.updateLine({id: this.props.id, content: editorState.getCurrentContent().getPlainText()})
+        const contentState = editorState.getCurrentContent();
+        const rawContentState = convertToRaw(contentState);
+
+        this.props.updateLine({id: this.props.id, rawContentState: rawContentState})
         this.setState({editorState});
     }
 

@@ -1,4 +1,5 @@
 import SMPTEtime from "../../utils/SMPTEtime.ts";
+import type {RawDraftContentState} from "draft-js";
 
 export const CREATE_LINE = "CREATE_LINE";
 export const UPDATE_LINE = "UPDATE_LINE";
@@ -12,7 +13,7 @@ export type ID_PROPERTY = {
 export type NewLine = {
     start: SMPTEtime;
     end: SMPTEtime;
-    content: string;
+    rawContentState: RawDraftContentState;
 }
 
 export type CreateLineAction = {
@@ -31,7 +32,7 @@ export function createLine(line: NewLine): CreateLineAction {
 export type UpdateLine = {
     start?: SMPTEtime;
     end?: SMPTEtime;
-    content?: string;
+    rawContentState?: RawDraftContentState;
 } & ID_PROPERTY;
 
 export type UpdateLineAction = {
