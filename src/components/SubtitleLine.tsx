@@ -37,13 +37,21 @@ class SubtitleLine extends Component<SubtitleLineProps, object> {
     render() {
         const id = this.props.id;
 
+        const durationInSeconds = this.props.end.toSeconds() - this.props.start.toSeconds();
+        const durationHours = Math.floor(durationInSeconds / 3600);
+        const durationMinutes = Math.floor((durationInSeconds / 60) % 60);
+        const durationSeconds = (durationInSeconds % 60).toFixed(2).padStart(5, '0');
+
+        const pad = (num: number) => num.toString().padStart(2, '0');
+        const durationText = `${pad(durationHours)}:${pad(durationMinutes)}:${durationSeconds}`;
+
         return (
             <div className="subtitle-line-container">
                 <div className="subtitle-line-times">
                     <TimeInput id={id} isStart={true} time={this.props.start} max={this.props.end}/>
                     <span className="subtitle-line-duration">
                         duration:
-                        <span>{SMPTEtime.subtract(this.props.end, this.props.start).toString()}</span>
+                        <span>{durationText}</span>
                     </span>
                     <TimeInput id={id} isStart={false} time={this.props.end} min={this.props.start}/>
                 </div>
